@@ -79,14 +79,14 @@
         }
         button {
             padding: 10px 20px;
-            background-color: darkred;
+            background-color: rgb(189, 31, 31);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
 
                 &:hover {
-                background-color: rgba(220, 20, 60, 0.796);
+                background-color: rgba(210, 20, 60, 0.796);
             }
         }
     }
