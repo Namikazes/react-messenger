@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './userInfo.css'
 import ProfileInfo from './profileInfo/ProfileInfo'
+import { useUserStore } from '../../../lib/userStore'
 
 const UserInfo = () => {
 
@@ -10,11 +11,13 @@ const UserInfo = () => {
         setProfile(!profile)
     }
 
+    const {currentUser} = useUserStore();
+
     return (
         <div className='userInfo'>
             <div className='user' onClick={handleProfile}>
                 <img src='./avatar.png' alt='avatar'/>
-                <h2>Egor Shytenko</h2>
+                <h2>{currentUser.username}</h2>
             </div>
             <div className='icons'>
                 <img src='./more.png'/>
