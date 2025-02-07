@@ -1,12 +1,32 @@
-import { auth } from '../../lib/firebase'
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { useChatStore } from '../../lib/chatStore';
+import { auth, db } from '../../lib/firebase'
 import './detail.css'
+import { useUserStore } from '../../lib/userStore';
 
 const Detail = () => {
+
+    const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
+    const { currentUser } = useUserStore();
+
+    const handelBlock = async () => {
+        if(!user) return;
+        const userDocRef = doc(db, "users", currentUser.id)
+
+        try{
+            await updateDoc(userDocRef, {
+                blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
+            });
+            changeBlock()
+        }catch(err){
+            console.log(err)
+        }
+    }
     return (
         <div className="detail">
             <div className="user">
-                <img src='./avatar.png' alt='avatar' />
-                <h2>Joy Yo</h2>
+                <img src={user?.avatar || './avatar.png'} alt='avatar' />
+                <h2>{user?.username}</h2>
                 <p>I love to track and always do it and my goal is to track 25,000 OPF</p>
             </div>
             <div className="info">
@@ -70,7 +90,9 @@ const Detail = () => {
                         <img src='./arrowUp.png' alt='arrow' />
                     </div>
                 </div>
-                <button>Block User</button>
+                <button onClick={handelBlock}>{
+                    isCurrentUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "User Blocked" : "Block User"
+                    }</button>
                 <button className='logout' onClick={() => auth.signOut()}>Logout</button>
             </div>
         </div>
